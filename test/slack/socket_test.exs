@@ -29,6 +29,17 @@ defmodule Slack.SocketTest do
   }
   """
 
+  @interactive """
+  {
+    "envelope_id": "eid-890",
+    "type": "interactive",
+    "payload": {
+      "callback_id": "foo_bar",
+      "trigger_id": "123.456.789"
+    }
+  }
+  """
+
   @bot %Slack.Bot{
     id: "bot-123-ABC",
     module: TestBot,
@@ -70,5 +81,12 @@ defmodule Slack.SocketTest do
 
     assert {:reply, {:text, ~S({"envelope_id":"eid-567"})}, %{}} =
              Slack.Socket.handle_frame({:text, @slash_command}, %{})
+  end
+
+  test "socket can handle an interactive event" do
+    stub(Slack.API)
+
+    assert {:reply, {:text, ~S({"envelope_id":"eid-890"})}, %{}} =
+             Slack.Socket.handle_frame({:text, @interactive}, %{})
   end
 end
