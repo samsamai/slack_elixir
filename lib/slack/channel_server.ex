@@ -25,7 +25,8 @@ defmodule Slack.ChannelServer do
         types when is_list(types) -> Enum.join(types, ",")
       end
 
-    channels = fetch_channels(bot.token, channel_types)
+    # channels = fetch_channels(bot.token, channel_types)
+    channels = ["C010FUBTF1C"]
 
     GenServer.start_link(__MODULE__, {bot, channels}, name: via_tuple(bot))
   end

@@ -19,7 +19,12 @@ defmodule Slack.Socket do
 
     Logger.info("[Slack.Socket] connecting...")
 
-    WebSockex.start_link(url, __MODULE__, state)
+    opts = [
+      socket_connect_timeout: 600_000,
+      socket_recv_timeout: 600_000
+    ]
+
+    WebSockex.start_link(url, __MODULE__, state, opts)
   end
 
   # ----------------------------------------------------------------------------
