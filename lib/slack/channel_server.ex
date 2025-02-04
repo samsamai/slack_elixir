@@ -15,7 +15,7 @@ defmodule Slack.ChannelServer do
   # ----------------------------------------------------------------------------
 
   def start_link({bot, config}) do
-    Logger.info("[Slack.ChannelServer] starting for #{bot.module}...")
+    Logger.info("@@@ [Slack.ChannelServer] starting for #{bot.module}...")
 
     # This should be a comma-separated string.
     channel_types =
@@ -55,12 +55,16 @@ defmodule Slack.ChannelServer do
 
   @impl true
   def handle_continue(:join, state) do
+    IO.inspect("@@ handle_continue")
+
     Enum.each(state.channels, &join(state.bot, &1))
     {:noreply, state}
   end
 
   @impl true
   def handle_cast({:join, channel}, state) do
+    IO.inspect("@@ handle_cast join")
+
     Logger.info("[Slack.ChannelServer] #{state.bot.module} joining #{channel}...")
     {:ok, _} = Slack.MessageServer.start_supervised(state.bot, channel)
     {:noreply, Map.update!(state, :channels, &[channel | &1])}
@@ -73,6 +77,8 @@ defmodule Slack.ChannelServer do
   end
 
   defp via_tuple(%Slack.Bot{module: bot}) do
+    IO.inspect("@@ via_tuple")
+
     {:via, Registry, {Slack.ChannelServerRegistry, bot}}
   end
 
